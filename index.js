@@ -24,10 +24,10 @@ client.once('clientReady', async () => {
   console.log(`Bot online: ${client.user.tag}`);
 
   try {
-    await rest.put(
-      Routes.applicationGuildCommands(CLIENT_ID, "1058207045217685554")
-      { body: commands },
-    );
+await rest.put(
+  Routes.applicationGuildCommands(CLIENT_ID, "1058207045217685554"),
+  { body: commands },
+);
     console.log('Comando /say registrado!');
   } catch (error) {
     console.error(error);
