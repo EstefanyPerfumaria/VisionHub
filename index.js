@@ -1,9 +1,9 @@
 const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 // ===== CONFIGURAÇÃO DO BOT =====
-const TOKEN = "SEU_TOKEN_AQUI";         // Coloque o token do seu bot
-const CLIENT_ID = "SEU_CLIENT_ID_AQUI"; // Coloque o ID do seu bot
-const GUILD_ID = "SEU_GUILD_ID_AQUI";   // Coloque o ID do seu servidor
+const TOKEN = "MTQ4Njk2MTAzNTU3NDUwOTY0OA.GVxzSC.sd6gyT5TQ7HDB4rvZYLTcm0_zzY_JeRLMp_Sx8"; 
+const CLIENT_ID = "1486961035574509648"; 
+const GUILD_ID = "1058207045217685554"; // Substitua pelo ID do seu servidor
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds],
@@ -24,7 +24,7 @@ const commands = [
 const rest = new REST({ version: '10' }).setToken(TOKEN);
 
 // ===== REGISTRA COMANDOS =====
-client.once('clientReady', async () => { // Corrigido para v15+
+client.once('clientReady', async () => {
   console.log(`Bot online: ${client.user.tag}`);
 
   try {
@@ -45,18 +45,14 @@ client.on('interactionCreate', async interaction => {
   if (interaction.commandName === 'say') {
     const msg = interaction.options.getString('msg');
 
-    // Criando o embed roxo
     const embed = new EmbedBuilder()
       .setColor(0x5865f2) // 💜 roxo Discord
-      .setTitle('VisionHub ☯')
+      .setTitle('📢 Mensagem do Bot')
       .setDescription(msg)
       .setFooter({ text: `Enviado por ${interaction.user.username}` })
       .setTimestamp();
 
-    // Resposta invisível só pra quem usou o comando
     await interaction.reply({ content: 'Mensagem enviada!', ephemeral: true });
-
-    // Envia o embed no canal
     await interaction.channel.send({ embeds: [embed] });
   }
 });
