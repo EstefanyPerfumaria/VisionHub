@@ -15,8 +15,7 @@ const commands = [
       option.setName('msg')
         .setDescription('Mensagem')
         .setRequired(true))
-].toJSON()
-];
+].map(cmd => cmd.toJSON());
 
 const rest = new REST({ version: '10' }).setToken(TOKEN);
 
