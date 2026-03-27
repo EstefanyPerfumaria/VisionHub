@@ -1,5 +1,4 @@
 const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-require('dotenv').config(); // caso você use arquivo .env
 
 // ===== CONFIGURAÇÃO DO CLIENTE =====
 const client = new Client({
