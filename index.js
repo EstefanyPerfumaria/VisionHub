@@ -1,65 +1,65 @@
 const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+require('dotenv').config(); // caso você use arquivo .env
 
+// ===== CONFIGURAÇÃO DO CLIENTE =====
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds]
+  intents: [GatewayIntentBits.Guilds],
 });
 
 const TOKEN = process.env.TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID;
-const GUILD_ID = "1058207045217685554";
+const GUILD_ID = process.env.GUILD_ID; // coloque o ID do seu servidor
 
+// ===== COMANDO /SAY =====
 const commands = [
   new SlashCommandBuilder()
-    .setName('regras')
-    .setDescription('Enviar regras do servidor')
+    .setName('say')
+    .setDescription('Faz o bot falar com embed roxo')
+    .addStringOption(option =>
+      option.setName('msg')
+        .setDescription('Mensagem que o bot vai enviar')
+        .setRequired(true))
 ].map(cmd => cmd.toJSON());
 
 const rest = new REST({ version: '10' }).setToken(TOKEN);
 
+// ===== REGISTRA COMANDO =====
 client.once('ready', async () => {
   console.log(`Bot online: ${client.user.tag}`);
 
-  await rest.put(
-    Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID),
-    { body: commands }
-  );
+  try {
+    await rest.put(
+      Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID),
+      { body: commands }
+    );
+    console.log('Comando /say registrado!');
+  } catch (err) {
+    console.error('Erro ao registrar comando:', err);
+  }
 });
 
+// ===== EXECUÇÃO DO COMANDO =====
 client.on('interactionCreate', async interaction => {
   if (!interaction.isChatInputCommand()) return;
 
-  if (interaction.commandName === 'regras') {
+  if (interaction.commandName === 'say') {
+    const msg = interaction.options.getString('msg');
 
+    // Criando o embed roxo
     const embed = new EmbedBuilder()
-      .setColor('#2b2d31')
-      .setTitle('📜 Regras do Servidor')
-      .setDescription('Leia nossas regras e evite problemas.')
-      .setImage('https://seulink.com/regras.png')
-      .addFields(
-        {
-          name: '1️⃣ Diretrizes Gerais',
-          value:
-            '• Siga sempre as Diretrizes da Comunidade do Discord.\n' +
-            '• O respeito e a boa convivência são fundamentais.'
-        },
-        {
-          name: '2️⃣ Regras de Chat',
-          value:
-            '• Respeite todos os membros.\n' +
-            '• Sem xingamentos ou ataques.\n' +
-            '• Proibido spam.\n' +
-            '• Proibido divulgar links sem permissão.\n' +
-            '• Use os canais corretamente.\n' +
-            '• Não compartilhe informações pessoais.\n' +
-            '• Respeite a staff.'
-        }
-      )
-      .setFooter({ text: 'EQP STJ • Regras Oficiais' })
+      .setColor(0x5865f2) // roxo Discord
+      .setTitle('📢 Mensagem do Bot')
+      .setDescription(msg)
+      .setFooter({ text: `Enviado por ${interaction.user.username}` })
       .setTimestamp();
 
-    await interaction.reply({ content: 'Regras enviadas!', ephemeral: true });
+    // Resposta rápida só pra quem usou o comando
+    await interaction.reply({ content: 'Mensagem enviada!', ephemeral: true });
+
+    // Envia o embed no canal
     await interaction.channel.send({ embeds: [embed] });
   }
 });
 
+// ===== LOGIN =====
 client.login(TOKEN);
