@@ -1,13 +1,22 @@
-client.once('ready', async () => {
-  console.log(`Bot online: ${client.user.tag}`);
+const { Client, GatewayIntentBits } = require('discord.js');
 
-  try {
-    await rest.put(
-      Routes.applicationCommands(CLIENT_ID),
-      { body: commands }
-    );
-    console.log('Comando /say registrado!');
-  } catch (err) {
-    console.error(err);
+const client = new Client({
+  intents: [GatewayIntentBits.Guilds]
+});
+
+const TOKEN = process.env.TOKEN;
+
+client.once('ready', () => {
+  console.log(`Bot online: ${client.user.tag}`);
+});
+
+client.on('interactionCreate', async interaction => {
+  if (!interaction.isChatInputCommand()) return;
+
+  if (interaction.commandName === 'say') {
+    const msg = interaction.options.getString('msg');
+    await interaction.reply(msg);
   }
 });
+
+client.login(TOKEN);
