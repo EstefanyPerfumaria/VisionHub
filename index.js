@@ -25,7 +25,7 @@ client.once('clientReady', async () => {
 
   try {
     await rest.put(
-      Routes.applicationCommands(CLIENT_ID),
+      Routes.applicationGuildCommands(CLIENT_ID, "1058207045217685554")
       { body: commands },
     );
     console.log('Comando /say registrado!');
